@@ -1,4 +1,3 @@
-
 /**
  * Module dependencies.
  */
@@ -8,8 +7,6 @@ var express = require('express')
   , path = require('path')
   , OAuth = require('oauth')
   , config = require('./config.js');
-
-console.log(config);
 
 var twitter = new OAuth.OAuth(
   'https://api.twitter.com/oauth/request_token',
@@ -29,7 +26,6 @@ app.use(express.logger('dev'));
 app.use(express.bodyParser());
 app.use(express.methodOverride());
 app.use(app.router);
-app.use(express.static(path.join(__dirname, 'public')));
 
 // development only
 if ('development' == app.get('env')) {
@@ -38,7 +34,6 @@ if ('development' == app.get('env')) {
 
 app.get('*', function(req,res){
   var url = req.originalUrl.replace('/1/','/1.1/');
-  // url = url.replace(/&?callback=\?/gi,''); // remove JSONP callback
 
   twitter.get(
     'https://api.twitter.com'+url,
@@ -46,8 +41,6 @@ app.get('*', function(req,res){
     config.ACCESS_SECRET,
     function (e, data, response){
       if (e) console.error(e);
-      console.log(data);
-      console.log("SENDING!");
       res.send(data);
     });    
 });
